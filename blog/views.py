@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.db.models import Q
-from django.contrib.auth import logout
 from .models import BlogPost, BlogAuthor, Comment
 from .forms import CommentForm, UserRegistrationForm, BlogPostForm
 
@@ -174,9 +173,3 @@ def search(request):
         'blog_posts': blog_posts,
         'query': query
     })
-
-def custom_logout(request):
-    """Custom logout view that redirects to home with a message."""
-    logout(request)
-    messages.success(request, 'You have been successfully logged out.')
-    return redirect('index')
