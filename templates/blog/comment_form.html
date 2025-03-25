@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-form">
+    <h2>{% if is_edit %}Edit Comment{% else %}Add Comment{% endif %}</h2>
+    <h4 class="mb-4">Blog: <a href="{% url 'blog-detail' blog.pk %}">{{ blog.title }}</a></h4>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Comment:</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+            <ul class="errorlist">
+                {% for error in form.description.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-grow-1">
+                {% if is_edit %}Save Changes{% else %}Submit Comment{% endif %}
+            </button>
+            <a href="{% url 'blog-detail' blog.pk %}" class="btn btn-secondary flex-grow-1">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %} 

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Search Results</h1>
+    {% if query %}
+        <p class="mb-4">Search results for: "{{ query }}"</p>
+    {% endif %}
+
+    {% if blog_posts %}
+    <div class="row">
+        {% for post in blog_posts %}
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title h5">
+                        <a href="{% url 'blog-detail' post.pk %}" class="text-decoration-none">{{ post.title }}</a>
+                    </h2>
+                    <p class="card-text">{{ post.content|truncatewords:50 }}</p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Posted by {{ post.author.user.username }} on {{ post.post_date|date:"F d, Y" }}
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        {% if query %}
+            <p>No blog posts found matching your search.</p>
+        {% else %}
+            <p>No blog posts available.</p>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %} 

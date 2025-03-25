@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mini Blog{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --primary-dark: #2980b9;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --background-color: #f8f9fa;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --hover-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: #333;
+            line-height: 1.6;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            background: linear-gradient(135deg, var(--secondary-color), #34495e) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white !important;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-1px);
+            color: var(--primary-color) !important;
+        }
+        
+        /* Container and Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            background: white;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+        
+        .card-body {
+            padding: 2rem;
+        }
+
+        .card-title {
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .card-text {
+            color: #555;
+            line-height: 1.7;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.75rem; }
+        
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        
+        /* Alerts and Messages */
+        .alert {
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-weight: 500;
+        }
+        
+        /* Search Form */
+        .search-form {
+            margin-right: 1.5rem;
+        }
+        
+        .search-form .input-group {
+            width: 300px;
+            border-radius: 25px;
+            overflow: hidden;
+        }
+        
+        .search-form .form-control {
+            border-radius: 25px 0 0 25px;
+            border: 2px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .search-form .form-control::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .search-form .btn {
+            border-radius: 0 25px 25px 0;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .search-form .btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 2rem;
+        }
+
+        .sidebar h5 {
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .sidebar .nav-link {
+            color: #555;
+            padding: 0.75rem 0;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #eee;
+            font-weight: 500;
+        }
+
+        .sidebar .nav-link:hover {
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav-link:last-child {
+            border-bottom: none;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            min-height: calc(100vh - 80px);
+            padding: 2rem 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 991.98px) {
+            .search-form {
+                margin: 1rem 0;
+                width: 100%;
+            }
+            
+            .search-form .input-group {
+                width: 100%;
+            }
+
+            .sidebar {
+                margin-bottom: 2rem;
+                position: static;
+            }
+        }
+
+        /* Auth Forms */
+        .auth-form {
+            max-width: 450px;
+            margin: 3rem auto;
+            padding: 2.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--secondary-color);
+        }
+
+        .auth-form form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .auth-form .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .auth-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        .auth-form .form-control {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 2px solid #eee;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .auth-form .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+        
+        .auth-form .helptext {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.825rem;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .auth-form .helptext ul {
+            padding-left: 1.25rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0;
+        }
+        
+        .auth-form .helptext li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .auth-form .errorlist {
+            list-style: none;
+            padding-left: 0;
+            color: var(--accent-color);
+            font-size: 0.875rem;
+            margin: 0.25rem 0;
+        }
+        
+        .auth-form .btn-primary {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .auth-form p {
+            margin-bottom: 1rem;
+        }
+        
+        .auth-form .form-text {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        /* Password field styles */
+        .password-field-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        
+        .password-toggle-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+            z-index: 5;
+        }
+        
+        .password-toggle-icon:hover {
+            color: var(--primary-color);
+        }
+        
+        .password-field-wrapper input {
+            padding-right: 40px;
+        }
+
+        /* Blog Post Cards */
+        .blog-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .blog-card .card-body {
+            padding: 2rem;
+        }
+
+        .blog-card .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .blog-card .card-text {
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .blog-meta {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 1rem;
+        }
+
+        .blog-meta i {
+            margin-right: 0.5rem;
+        }
+
+        /* Comments Section */
+        .comments-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
+        }
+
+        .comment {
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .comment-meta {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Pagination */
+        .pagination {
+            margin-top: 2rem;
+        }
+
+        .page-link {
+            padding: 0.75rem 1rem;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            border: none;
+            color: var(--secondary-color);
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .page-link:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .page-item.active .page-link {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <i class="fas fa-blog me-2"></i>Mini Blog
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'blog-list' %}">
+                            <i class="fas fa-newspaper me-1"></i>All Posts
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'blogger-list' %}">
+                            <i class="fas fa-users me-1"></i>Bloggers
+                        </a>
+                    </li>
+                </ul>
+                <form class="search-form d-flex" action="{% url 'search' %}" method="GET">
+                    <div class="input-group">
+                        <input type="search" name="q" class="form-control" placeholder="Search posts..." aria-label="Search">
+                        <button class="btn" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'profile' %}">
+                                <i class="fas fa-user me-1"></i>Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">
+                                <i class="fas fa-user-plus me-1"></i>Register
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-content">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                <div class="sidebar">
+                    <h5><i class="fas fa-compass me-2"></i>Navigation</h5>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="{% url 'index' %}">
+                            <i class="fas fa-home me-2"></i>Home
+                        </a>
+                        <a class="nav-link" href="{% url 'blog-list' %}">
+                            <i class="fas fa-newspaper me-2"></i>All Blog Posts
+                        </a>
+                        <a class="nav-link" href="{% url 'blogger-list' %}">
+                            <i class="fas fa-users me-2"></i>All Bloggers
+                        </a>
+                        {% if user.is_authenticated %}
+                        <a class="nav-link" href="{% url 'blog-create' %}">
+                            <i class="fas fa-plus-circle me-2"></i>Create New Post
+                        </a>
+                        <a class="nav-link" href="{% url 'profile' %}">
+                            <i class="fas fa-user me-2"></i>My Profile
+                        </a>
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                        {% endif %}
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9">
+                {% if messages %}
+                <div class="messages mb-4">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} d-flex align-items-center">
+                        {% if message.tags == 'success' %}
+                            <i class="fas fa-check-circle me-2"></i>
+                        {% elif message.tags == 'error' %}
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                        {% elif message.tags == 'warning' %}
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                        {% elif message.tags == 'info' %}
+                            <i class="fas fa-info-circle me-2"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Password visibility toggle
+            const togglePasswordVisibility = (passwordField, icon) => {
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    passwordField.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            };
+
+            document.querySelectorAll('.password-toggle-icon').forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const passwordField = this.previousElementSibling;
+                    togglePasswordVisibility(passwordField, this);
+                });
+            });
+
+            // Add smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

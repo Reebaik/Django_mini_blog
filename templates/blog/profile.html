@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">My Blog Posts</h1>
+    <div class="mb-4">
+        <a href="{% url 'blog-create' %}" class="btn btn-success">Create New Post</a>
+    </div>
+
+    {% if blog_posts %}
+    <div class="row">
+        {% for post in blog_posts %}
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title h5">
+                        <a href="{% url 'blog-detail' post.pk %}" class="text-decoration-none">{{ post.title }}</a>
+                    </h2>
+                    <p class="card-text">{{ post.content|truncatewords:50 }}</p>
+                    <p class="card-text">
+                        <small class="text-muted">Posted on {{ post.post_date|date:"F d, Y" }}</small>
+                    </p>
+                    <div class="btn-group">
+                        <a href="{% url 'blog-update' post.pk %}" class="btn btn-primary">Edit</a>
+                        <a href="{% url 'blog-delete' post.pk %}" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>You haven't created any blog posts yet.</p>
+    {% endif %}
+</div>
+{% endblock %} 

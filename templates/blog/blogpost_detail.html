@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <article class="blog-post">
+        <h1>{{ object.title }}</h1>
+        <p class="text-muted">
+            Posted by {{ object.author.user.username }} on {{ object.post_date|date:"F d, Y" }}
+        </p>
+        
+        <div class="blog-content mt-4">
+            {{ object.content|linebreaks }}
+        </div>
+
+        {% if user == object.author.user %}
+        <div class="mt-4">
+            <a href="{% url 'blog-update' object.pk %}" class="btn btn-primary">Edit Post</a>
+            <a href="{% url 'blog-delete' object.pk %}" class="btn btn-danger">Delete Post</a>
+        </div>
+        {% endif %}
+    </article>
+
+    <section class="comments mt-5">
+        <h2>Comments</h2>
+        
+        {% if user.is_authenticated %}
+        <div class="mb-4">
+            <a href="{% url 'blog-comment-create' object.pk %}" class="btn btn-primary">Add Comment</a>
+        </div>
+        {% else %}
+        <p>Please <a href="{% url 'login' %}?next={{ request.path }}">login</a> to add a comment.</p>
+        {% endif %}
+
+        {% if object.comment_set.all %}
+        <div class="comment-list">
+            {% for comment in object.comment_set.all %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="card-text">{{ comment.description|linebreaks }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <p class="card-text mb-0">
+                            <small class="text-muted">
+                                Posted by {{ comment.author.username }} on {{ comment.post_date|date:"F d, Y" }}
+                            </small>
+                        </p>
+                        {% if user == comment.author %}
+                        <div class="btn-group">
+                            <a href="{% url 'comment-edit' comment.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a href="{% url 'comment-delete' comment.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No comments yet.</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %} 

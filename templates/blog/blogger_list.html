@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}All Bloggers{% endblock %}
+
+{% block content %}
+<h1>All Bloggers</h1>
+
+{% if blogauthor_list %}
+<div class="blogger-list">
+    {% for blogger in blogauthor_list %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title h5">
+                <a href="{% url 'blogger-detail' blogger.pk %}" class="text-decoration-none">{{ blogger.user.username }}</a>
+            </h2>
+            {% if blogger.bio %}
+            <p class="card-text">{{ blogger.bio|truncatewords:30 }}</p>
+            {% endif %}
+            <p class="card-text">
+                <small class="text-muted">
+                    {{ blogger.blogpost_set.count }} blog post{{ blogger.blogpost_set.count|pluralize }}
+                </small>
+            </p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>There are no bloggers registered yet.</p>
+{% endif %}
+{% endblock %} 
